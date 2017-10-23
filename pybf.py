@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+
+stdin_buffer = ''
+def getchar():
+    global stdin_buffer
+    if (len(stdin_buffer) == 0):
+        stdin_buffer = input().encode('ascii')
+    c = stdin_buffer[0]
+    stdin_buffer = stdin_buffer[1:]
+    return c
+
 def pre_execute(code: list):
     cp = 0
     bracket = list()
@@ -29,7 +39,7 @@ def execute(code: list):
         elif (code[cp] == '.'):
             print(chr(stack[sp]), end='')
         elif (code[cp] == ','):
-            stack[sp] = input().encode('ascii')[0]
+            stack[sp] = getchar()
         elif (code[cp] > 0 and stack[sp] == 0):
             cp = code[cp]
         elif (code[cp] < 0 and stack[sp] != 0):
