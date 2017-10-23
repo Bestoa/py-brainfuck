@@ -6,4 +6,3 @@ Tiny brainfuck interpreter with Python3
 
 ## TODO:
 1. Extend the brainfuck syntax, make it useful.
-2. Can't input enter.
