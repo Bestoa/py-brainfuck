@@ -1,9 +1,6 @@
-#!/usr/bin/env python3
 '''Brainfuck interpreter'''
 
-STACK_SIZE = 512
-
-def static_vars():
+def __static_vars():
     '''Decorate, add static attr'''
     def decorate(func):
         '''The decorate'''
@@ -11,17 +8,17 @@ def static_vars():
         return func
     return decorate
 
-@static_vars()
-def getchar():
+@__static_vars()
+def __getchar():
     '''Return one char from stdin'''
-    buffer_len = len(getchar.stdin_buffer)
+    buffer_len = len(__getchar.stdin_buffer)
     if buffer_len == 0:
-        getchar.stdin_buffer = list(input().encode('ascii'))
-        getchar.stdin_buffer.append(10) # We need this enter to compact getchar from libc.
-    ret_c, getchar.stdin_buffer = getchar.stdin_buffer[0], getchar.stdin_buffer[1:]
+        __getchar.stdin_buffer = list(input().encode('ascii'))
+        __getchar.stdin_buffer.append(10) # We need this enter to compact getchar from libc.
+    ret_c, __getchar.stdin_buffer = __getchar.stdin_buffer[0], __getchar.stdin_buffer[1:]
     return ret_c
 
-def pre_execute(raw_code: str):
+def __pre_execute(raw_code: str):
     '''Replace the [] with paired code pointer'''
     iptr = 0
     bracket = list()
@@ -40,11 +37,11 @@ def pre_execute(raw_code: str):
         code = []
     return code
 
-def execute(code: list):
+def __execute(code: list, stack_size: int):
     '''Run bf code'''
     iptr = 0
     sptr = 0
-    stack = list(0 for _ in range(STACK_SIZE))
+    stack = list(0 for _ in range(stack_size))
     code_len = len(code)
     while iptr < code_len:
         instruction = code[iptr][0]
@@ -63,7 +60,7 @@ def execute(code: list):
         elif instruction == '.':
             print(chr(stack[sptr]), end='')
         elif instruction == ',':
-            stack[sptr] = getchar()
+            stack[sptr] = __getchar()
         elif instruction == '[' and stack[sptr] == 0:
             iptr = code[iptr][1]
         elif instruction == ']' and stack[sptr] != 0:
@@ -71,12 +68,11 @@ def execute(code: list):
         iptr += 1
     print("RET(stack[0]) = %d" % stack[0])
 
-def run(raw_code: str = ''):
-    '''Main function'''
+def run(raw_code: str = '', stack_size: int = 128):
+    '''Interpreter the raw_code.
+    If the raw_code is empty, the program will get string from input.
+    '''
     if raw_code == '':
         raw_code = input('% ')
-    code = pre_execute(raw_code)
-    execute(code)
-
-if __name__ == '__main__':
-    run(input())
+    code = __pre_execute(raw_code)
+    __execute(code, stack_size)
