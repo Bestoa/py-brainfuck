@@ -7,7 +7,7 @@ setup(
     url = 'https://github.com/Bestoa/py-brainfuck',
     author = 'Besto',
     author_email = 'bestoapache@gmail.com',
-    license = 'LGPL',
+    license = 'MIT',
     classifiers=[
         # How mature is this project? Common values are
         #   3 - Alpha
@@ -16,7 +16,7 @@ setup(
         'Development Status :: 3 - Alpha',
 
         # Pick your license as you wish (should match "license" above)
-        'License :: OSI Approved :: LGPL License',
+        'License :: OSI Approved :: MIT License',
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
