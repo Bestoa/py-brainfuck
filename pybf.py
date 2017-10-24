@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 '''Brainfuck interpreter'''
 
+STACK_SIZE = 512
+
 def static_vars():
     '''Decorate, add static attr'''
     def decorate(func):
@@ -12,66 +14,69 @@ def static_vars():
 @static_vars()
 def getchar():
     '''Return one char from stdin'''
-    if len(getchar.stdin_buffer) == 0:
+    buffer_len = len(getchar.stdin_buffer)
+    if buffer_len == 0:
         getchar.stdin_buffer = list(input().encode('ascii'))
         getchar.stdin_buffer.append(10) # We need this enter to compact getchar from libc.
     ret_c, getchar.stdin_buffer = getchar.stdin_buffer[0], getchar.stdin_buffer[1:]
     return ret_c
 
-def pre_execute(code: list):
+def pre_execute(raw_code: str):
     '''Replace the [] with paired code pointer'''
-    code_pointer = 0
+    iptr = 0
     bracket = list()
-    while code_pointer < len(code):
-        if code[code_pointer] == '[':
-            bracket.append(code_pointer)
-        elif code[code_pointer] == ']':
-            previous = bracket.pop()
-            code[previous] = code_pointer
-            code[code_pointer] = -previous
-        code_pointer += 1
-    if len(bracket) != 0:
-        return True
-    return False
+    code = list(raw_code)
+    code_len = len(code)
+    while iptr < code_len:
+        code[iptr] = [code[iptr], '']
+        if code[iptr][0] == '[':
+            bracket.append(iptr)
+        elif code[iptr][0] == ']':
+            piptr = bracket.pop()
+            code[piptr][1], code[iptr][1] = iptr, piptr
+        iptr += 1
+    bracket_len = len(bracket)
+    if bracket_len != 0:
+        code = []
+    return code
 
 def execute(code: list):
     '''Run bf code'''
-    code_pointer = 0
-    stack_pointer = 0
-    stack = list(0 for _ in range(512))
-    while code_pointer < len(code):
-        if code[code_pointer] == '>':
-            stack_pointer += 1
-        elif code[code_pointer] == '<':
-            stack_pointer -= 1
-        elif code[code_pointer] == '+':
-            stack[stack_pointer] += 1
-            if stack[stack_pointer] == 256:
-                stack[stack_pointer] = 0
-        elif code[code_pointer] == '-':
-            stack[stack_pointer] -= 1
-            if stack[stack_pointer] == -1:
-                stack[stack_pointer] = 255
-        elif code[code_pointer] == '.':
-            print(chr(stack[stack_pointer]), end='')
-        elif code[code_pointer] == ',':
-            stack[stack_pointer] = getchar()
-        elif code[code_pointer] > 0 and stack[stack_pointer] == 0:
-            code_pointer = code[code_pointer]
-        elif code[code_pointer] < 0 and stack[stack_pointer] != 0:
-            code_pointer = -(code[code_pointer])
-        code_pointer += 1
-        #print(code_pointer)
+    iptr = 0
+    sptr = 0
+    stack = list(0 for _ in range(STACK_SIZE))
+    code_len = len(code)
+    while iptr < code_len:
+        instruction = code[iptr][0]
+        if instruction == '>':
+            sptr += 1
+        elif instruction == '<':
+            sptr -= 1
+        elif instruction == '+':
+            stack[sptr] += 1
+            if stack[sptr] == 256:
+                stack[sptr] = 0
+        elif instruction == '-':
+            stack[sptr] -= 1
+            if stack[sptr] == -1:
+                stack[sptr] = 255
+        elif instruction == '.':
+            print(chr(stack[sptr]), end='')
+        elif instruction == ',':
+            stack[sptr] = getchar()
+        elif instruction == '[' and stack[sptr] == 0:
+            iptr = code[iptr][1]
+        elif instruction == ']' and stack[sptr] != 0:
+            iptr = code[iptr][1]
+        iptr += 1
     print("RET(stack[0]) = %d" % stack[0])
 
-def brainfuck_main():
+def run(raw_code: str = ''):
     '''Main function'''
-    code = input()
-    code = list(code)
-    if pre_execute(code):
-        print('Stynax error')
-        return
+    if raw_code == '':
+        raw_code = input('% ')
+    code = pre_execute(raw_code)
     execute(code)
 
 if __name__ == '__main__':
-    brainfuck_main()
+    run(input())
