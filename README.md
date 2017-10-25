@@ -1,6 +1,8 @@
 # py-brainfuck
 Tiny brainfuck interpreter with pure Python3
 
+[![Build Status](https://travis-ci.org/Bestoa/py-brainfuck.svg?branch=master)](https://travis-ci.org/Bestoa/py-brainfuck)
+
 1. Core code just has ~40 lines.
 2. Stack size is flexible, default is 128 Bytes.
 
