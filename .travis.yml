@@ -10,4 +10,4 @@ python:
   - "3.7-dev" # 3.7 development branch
   - "nightly"
 script:
-  - pytest # or py.test for Python versions 3.5 and below
+  ./test.sh
