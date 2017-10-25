@@ -1,5 +1,7 @@
 '''Brainfuck interpreter'''
 
+VERSION = '0.0.2.1558'
+
 def __static_vars():
     '''Decorate, add static attr'''
     def decorate(func):

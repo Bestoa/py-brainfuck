@@ -20,3 +20,6 @@ def test_print_prime():
     with open('tests/except_result', 'r') as f:
         except_result = f.read()
         assert except_result == result
+
+def test_version():
+    assert nbfi.VERSION == '0.0.2.1558'
