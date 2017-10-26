@@ -22,4 +22,4 @@ def test_print_prime():
         assert except_result == result
 
 def test_version():
-    assert nbfi.VERSION == '0.0.2.1558'
+    assert nbfi.VERSION == '0.1.0.1047'
