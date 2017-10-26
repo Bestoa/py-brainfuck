@@ -68,6 +68,8 @@ def __execute(code: list, stack_size: int) -> list:
         elif instruction == ']' and stack[sptr] != 0:
             iptr = code[iptr][1]
         iptr += 1
+    # Clean the buffer, otherwise it will affect next round result.
+    # __getchar.stdin_buffer = []
     return stack
 
 def run(raw_code: str = '', stack_size: int = 128) -> list:
