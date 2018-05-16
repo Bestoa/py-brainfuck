@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'nbfi',
-    version = '0.1.1',
-    description = 'A tiny new brainfuck interpreter in pure python 3',
+    version = '0.1.2',
+    description = 'A tiny new brainfuck interpreter which is compatible with Python 3/Pypy 3',
     url = 'https://github.com/Bestoa/py-brainfuck',
     author = 'Besto',
     author_email = 'bestoapache@gmail.com',

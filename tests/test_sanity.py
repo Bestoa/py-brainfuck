@@ -31,4 +31,4 @@ def test_overflow():
     assert stack[0] == 0
 
 def test_version():
-    assert nbfi.VERSION == '0.1.1.1634'
+    assert nbfi.VERSION == '0.1.2.1103'
