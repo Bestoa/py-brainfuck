@@ -1,6 +1,7 @@
 # py-brainfuck
 Tiny brainfuck interpreter with pure Python3
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ac0d652193ac4b03a30219c64cf50d97)](https://app.codacy.com/app/Bestoa/py-brainfuck?utm_source=github.com&utm_medium=referral&utm_content=Bestoa/py-brainfuck&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/Bestoa/py-brainfuck.svg?branch=master)](https://travis-ci.org/Bestoa/py-brainfuck)
 
 1. Core code just has ~40 lines.
