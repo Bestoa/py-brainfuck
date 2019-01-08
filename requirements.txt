@@ -1,2 +1,2 @@
 pytest-timeout
-pytest
+pytest>=3.6.0
