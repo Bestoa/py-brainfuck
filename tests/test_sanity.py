@@ -18,7 +18,7 @@ def test_print_prime():
     with open('demo/print_prime', 'r') as fin:
        stdin = sys.stdin
        sys.stdin = fin
-       result, stack = __run()
+       result, _ = __run()
        sys.stdin = stdin
 
     with open('tests/except_result', 'r') as f:
@@ -27,7 +27,7 @@ def test_print_prime():
 
 @pytest.mark.timeout(5)
 def test_overflow():
-    result, stack = __run('+[+]')
+    _, stack = __run('+[+]')
     assert stack[0] == 0
 
 def test_version():
