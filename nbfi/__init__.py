@@ -1,6 +1,6 @@
 '''Brainfuck interpreter'''
 
-VERSION = '0.1.2.1103'
+VERSION = '0.2.0.20240221'
 
 def __static_vars():
     '''Decorate, add static attr'''
@@ -20,14 +20,30 @@ def __getchar() -> int:
     ret_c, __getchar.stdin_buffer = __getchar.stdin_buffer[0], __getchar.stdin_buffer[1:]
     return ret_c
 
+def __count_same_op(code: str, ptr: int, end: int) -> int:
+    n = 1
+    while code[ptr + n] == code[ptr] and ptr < end:
+        n += 1
+    return n
+
 def __pre_execute(raw_code: str) -> list:
-    '''Replace the [] with paired code pointer'''
+    '''JIT'''
+    iptr = 0
+    code = list()
+    raw_code_len = len(raw_code)
+    while iptr < raw_code_len:
+        if (raw_code[iptr] == '>') or (raw_code[iptr] == '<') or (raw_code[iptr] == '+') or (raw_code[iptr] == '-'):
+            n = __count_same_op(raw_code, iptr, raw_code_len);
+            code.append([raw_code[iptr], n])
+            iptr += n
+        else:
+            code.append([raw_code[iptr], ''])
+            iptr += 1
+
     iptr = 0
     bracket = list()
-    code = list(raw_code)
     code_len = len(code)
     while iptr < code_len:
-        code[iptr] = [code[iptr], '']
         if code[iptr][0] == '[':
             bracket.append(iptr)
         elif code[iptr][0] == ']':
@@ -48,17 +64,17 @@ def __execute(code: list, stack_size: int) -> list:
     while iptr < code_len:
         instruction = code[iptr][0]
         if instruction == '>':
-            sptr += 1
+            sptr += code[iptr][1]
         elif instruction == '<':
-            sptr -= 1
+            sptr -= code[iptr][1]
         elif instruction == '+':
-            stack[sptr] += 1
-            if stack[sptr] == 256:
-                stack[sptr] = 0
+            stack[sptr] += code[iptr][1]
+            if stack[sptr] > 255:
+                stack[sptr] -= 256
         elif instruction == '-':
-            stack[sptr] -= 1
-            if stack[sptr] == -1:
-                stack[sptr] = 255
+            stack[sptr] -= code[iptr][1]
+            if stack[sptr] < 0:
+                stack[sptr] += 256
         elif instruction == '.':
             print(chr(stack[sptr]), end='')
         elif instruction == ',':
